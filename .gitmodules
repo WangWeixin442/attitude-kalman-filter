@@ -1,0 +1,3 @@
+[submodule "rotation3d"]
+	path = rotation3d
+	url = https://github.com/WangWeixin442/rotation3d
