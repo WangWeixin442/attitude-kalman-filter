@@ -1,22 +1,38 @@
-function [ qEst, P ] = MEKF( gyro, sf, q0, qMea, varargin )
+function [ qEst, P ] = MEKF( gyro, sf, q0, qMea, vMea, vRef, varargin )
 
 dt = 1/sf;
 Nt = length(gyro);
+
+% rotation or vector measurement
+if isempty(qMea)
+    meaType = 'V';
+else
+    meaType = 'A';
+end
 
 % default parameters
 U.P0 = 100;
 U.GyroAngleRW = 0.1*pi/180;
 U.rvstd = 0.1;
+U.vMeaStd = [0.1,0.1];
 
 U = parseVar(varargin,U);
 
 % Q and R
 Q = eye(3)*U.GyroAngleRW^2*dt;
-R = eye(3)*U.rvstd^2;
+if strcmp(meaType,'A')
+    R = eye(3)*U.rvstd^2;
+else
+    [~,~,rvvar] = vMea2R(vMea(:,:,1),vRef,U.vMeaStd,'q');
+    R = eye(3)*rvvar;
+end
 
 % pre-allocate memory
 qEst = zeros(Nt,4);
 P = zeros(3,3,Nt);
+if strcmp(meaType,'V')
+    qMea = zeros(Nt,4);
+end
 
 % initialize
 qEst(1,:) = q0;
@@ -31,6 +47,9 @@ for nt = 2:Nt
     % uncertainty propagation
     F = expRot(av*dt)';
     P(:,:,nt) = F*P(:,:,nt-1)*F'+Q;
+    
+    % if measurement comes in vector form, convert it first
+    [~,qMea(nt,:)] = vMea2R(vMea(:,:,nt),vRef,U.vMeaStd);
     
     % update
     K = P(:,:,nt)*(P(:,:,nt)+R)^-1;
@@ -62,6 +81,8 @@ while i <= length(inputs)
         U.GyroAngleRW = inputs{i+1};
     elseif strcmp(inputs{i},'rvstd')
         U.rvstd = inputs{i+1};
+    elseif strcmp(inputs{i},'vMeaStd')
+        U.vMeaStd = inputs{i+1};
     else
         error(strcat('No parameter specified by ',inputs{i}));
     end

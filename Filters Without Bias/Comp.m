@@ -1,7 +1,14 @@
-function [ qEst ] = Comp( gyro, sf, q0, qMea, varargin )
+function [ qEst ] = Comp( gyro, sf, q0, qMea, vMea, vRef, varargin )
 
 dt = 1/sf;
 Nt = length(gyro);
+
+% rotation or vector measurement
+if isempty(qMea)
+    meaType = 'V';
+else
+    meaType = 'A';
+end
 
 % default
 U.K = 0.03;
@@ -12,6 +19,9 @@ K = U.K;
 
 % pre-allocate memory
 qEst = zeros(Nt,4);
+if strcmp(meaType,'V')
+    qMea = zeros(Nt,4);
+end
 
 % initialize
 qEst(1,:) = q0;
@@ -22,6 +32,9 @@ for nt = 2:Nt
     % integration
     av = 0.5*(gyro(nt-1,:)+gyro(nt,:));
     qEst(nt,:) = mulQua(qEst(nt-1,:),expQua(av*dt+dv'));
+    
+    % if measurement comes in vector form, convert it first
+    [~,qMea(nt,:)] = vMea2R(vMea(:,:,nt),vRef,0.1*ones(1,size(vMea,2)));
     
     % update
     dv = K*logQua(mulQua(invQua(qEst(nt,:)),qMea(nt,:)),'v')';

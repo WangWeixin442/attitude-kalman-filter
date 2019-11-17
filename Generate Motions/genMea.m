@@ -1,15 +1,16 @@
-function [ qMea ] = genMea( q, type, vref, varargin )
+function [ mea ] = genMea( q, type, vref, varargin )
 
 Nt = length(q);
 
 % default paramters
 U.rvstd = 0.1;
+U.vstd = 0.5;
 
 if ~exist('type','var') || isempty(type)
     type = 'A';
 end
 if strcmpi(type,'V') && (~exist('vref','var') || isempty(vref))
-    
+    vref = [0;0;9.8];
 end
 
 U = parseVar(varargin,U);
@@ -17,9 +18,14 @@ U = parseVar(varargin,U);
 % generate random maesurement
 if strcmpi(type,'A')
     dv = randn(Nt,3)*U.rvstd;
-    qMea = mulQua(q,expQua(dv));
-else
-    error('vector measurement is under development');
+    mea = mulQua(q,expQua(dv));
+elseif strcmpi(type,'V')
+    RInv = invRot(qua2rot(q));
+    noise = randn(Nt,3)*U.vstd;
+    mea = zeros(Nt,3);
+    for n = 1:Nt
+        mea(n,:) = (RInv(:,:,n)*vref)'+noise(n,:);
+    end
 end
 
 end
@@ -41,6 +47,8 @@ while i <= length(inputs)
     
     if strcmp(inputs{i},'rvstd')
         U.rvstd = inputs{i+1};
+    elseif strcmp(inputs{i},'vstd')
+        U.vstd = inputs{i+1};
     else
         error(strcat('No parameter specified by ',inputs{i}));
     end
