@@ -34,7 +34,9 @@ for nt = 2:Nt
     qEst(nt,:) = mulQua(qEst(nt-1,:),expQua(av*dt+dv'));
     
     % if measurement comes in vector form, convert it first
-    [~,qMea(nt,:)] = vMea2R(vMea(:,:,nt),vRef,0.1*ones(1,size(vMea,2)));
+    if strcmp(meaType,'V')
+        [~,qMea(nt,:)] = vMea2R(vMea(:,:,nt),vRef,U.vMeaStd);
+    end
     
     % update
     dv = K*logQua(mulQua(invQua(qEst(nt,:)),qMea(nt,:)),'v')';

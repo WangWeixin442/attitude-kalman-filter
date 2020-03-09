@@ -64,7 +64,9 @@ for nt = 2:Nt
     P(:,:,nt) = F*P(:,:,nt-1)*F'+WB*Q*WB';
     
     % if measurement comes in vector form, convert it first
-    [~,qMea(nt,:)] = vMea2R(vMea(:,:,nt),vRef,U.vMeaStd);
+    if strcmp(meaType,'V')
+        [~,qMea(nt,:)] = vMea2R(vMea(:,:,nt),vRef,U.vMeaStd);
+    end
     
     % update
     K = P(:,:,nt)*(P(:,:,nt)+R)^-1;
