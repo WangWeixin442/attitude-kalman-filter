@@ -1,4 +1,10 @@
 function [ mea ] = genMea( q, type, vref, varargin )
+% For a given rotation motion, generate attitude or vector measurements
+% input parameters: q: true quaternions
+%                   type: 'A' for attitude; 'V' for vector
+%                   vref: reference vector in global frame
+% other parameters: rvstd: std for rotation vector (used when type='A')
+%                   vstd: std for vector (used when type='V')
 
 Nt = length(q);
 

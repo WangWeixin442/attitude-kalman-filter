@@ -1,4 +1,7 @@
 function [ qEst ] = Comp( gyro, sf, q0, qMea, vMea, vRef, varargin )
+% Attitude estimation using Complementary filter, see
+% "Nonlinear Complementary Filters on the Special Orthogonal Group", Mahony, 2008
+% parameter definitions are same as MEKF.
 
 dt = 1/sf;
 Nt = length(gyro);

@@ -1,5 +1,8 @@
 function [ q, gyro, bias ] = genRotAxis( t, sf, nobias, varargin )
 % RA is rotation axis, RARA is another rotation axis that RA rotates about
+% parameters: av: speed for the rotation about RA (rad/s)
+%             avRA: speed for RA rotating about RARA (rad/s)
+%             others: same as "getTrig"
 
 time = (0:1/sf:t)';
 

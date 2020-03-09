@@ -1,4 +1,7 @@
 function [ qEst, P ] = KFEul( gyro, sf, q0, qMea, vMea, vRef, varargin )
+% Attitude estimation using EKF based on Euler angles, see
+% "Intertial Head-Tracker Sensor Fusion by a Complementary Separate-Bias Kalman Filter", Foxlin, 1996
+% parameter definitions are same as MEKF.
 
 dt = 1/sf;
 Nt = length(gyro);

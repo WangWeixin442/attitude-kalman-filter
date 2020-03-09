@@ -1,4 +1,14 @@
 function [ qEst, P ] = MEKF( gyro, sf, q0, qMea, vMea, vRef, varargin )
+% Attitude estimation using multiplicative extanded Kalman filter, see
+% "Kalman Filtering for Spacecraft Attitude Estimation", Lefferts, 1982.
+% Note: the quaternion convention is different from the above reference!
+% input parameters: gyro: measured angular velocity
+%                   sf: sampling frequency
+%                   q0: initial quaternion
+%                   qMea: attitude measurements
+%                   vMea: vector measurements
+%                   vRef: reference vector in global frame
+% output parameters: P: covariance matrix for MEKF
 
 dt = 1/sf;
 Nt = length(gyro);

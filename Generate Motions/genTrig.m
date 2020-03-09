@@ -1,4 +1,18 @@
 function [ q, gyro, bias ] = genTrig( t, sf, nobias, varargin )
+% generate a rotation motion such that the three Euler angles (body 3-2-1)
+% follow sinusoidal waves
+% input: t: total time
+%        sf: sampling frequency
+%        nobias: if true, the gyroscope bias won't be returned
+% output: q: true quaternions
+%         gyro: measured angular velocity
+%         bias: true gyroscope bias
+% other parameters: fr, fp, fh: frequencies for the sinusoidal waves
+%                   phir, phip, phih: initial phase for the ...
+%                   magr, magp, magh: magnitude for the ...
+%                   medr, medp, medh: baseline for the sinusoidal waves
+%                   GyroAngleRW: angle random walk: rad/sqrt(s)
+%                   GyroBiasRW: bias random walk: rad/s/sqrt(s)
 
 time = (0:1/sf:t)';
 

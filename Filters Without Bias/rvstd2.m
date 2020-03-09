@@ -1,4 +1,6 @@
 function [ qstd, estd ] = rvstd2( rvstd )
+% fit a Gaussian distributed rotation vector to quaternions or Euler
+% angles.
 
 Ns = 1000000;
 

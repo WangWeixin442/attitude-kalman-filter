@@ -1,4 +1,7 @@
 function [ qEst, P ] = KFQua( gyro, sf, q0, qMea, vMea, vRef, varargin )
+% Attitude estimation using EKF based on quaternions, see
+% "Kalman Filtering for Spacecraft Attitude Estimation", Lefferts, 1982.
+% parameter definitions are same as MEKF.
 
 dt = 1/sf;
 Nt = length(gyro);

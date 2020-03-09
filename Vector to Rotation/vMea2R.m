@@ -1,4 +1,12 @@
 function [ R, q, rvvar ] = vMea2R( vMea, vRef, vstd, method )
+% convert vector measurements into attitude measurements
+% see "Three-Axis Attitude Determination from Vector Observations", Shuster, 1981
+% "Attitude Determination Using Vector Observations and the Singular Value Decomposition", Markley, 1988
+% input parameters: vMea: vector measurements in IMU frame
+%                   vRef: vector reference in global frame
+%                   vstd: std of vector measurement
+%                   method: 'q' or 'R'
+% output parameters: rvvar: std for the error rotation vector
 % vMea and vRef should be given as a 3-by-n matrix
 % vstd shoulb be given as a 1-by-n matrix
 
